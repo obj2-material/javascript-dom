@@ -1,0 +1,110 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Registro de ingresos por país</title>
+    <script>
+        var brasil = 0
+        var bolivia = 0
+        var paraguay = 0
+        var ultimos = []
+
+        function updateCantidadPorPais() {
+            document.getElementById("cantidadBrasil").innerHTML = brasil
+            document.getElementById("cantidadBolivia").innerHTML = bolivia
+            document.getElementById("cantidadParaguay").innerHTML = paraguay
+        }
+        function updateUltimasEntradas() {
+            let tabla = document.getElementById("ultimasEntradas")
+            tabla.innerHTML = []
+            ultimos.forEach((pais, ix) => {
+                let fila = document.createElement("tr")
+                let columna = document.createElement("td")
+                columna.innerHTML = (ix+1).toString() + ". " + pais
+                fila.appendChild(columna)
+                tabla.appendChild(fila)
+            })
+        }
+
+        function ingresoBrasil() { 
+            brasil++
+            agregarUltimaEntrada("Brasil")
+            updateCantidadPorPais() 
+        }
+        function ingresoBolivia() { 
+            bolivia++
+            agregarUltimaEntrada("Bolivia")
+            updateCantidadPorPais() 
+        }
+        function ingresoParaguay() { 
+            paraguay++; 
+            agregarUltimaEntrada("Paraguay")
+            updateCantidadPorPais() 
+        }
+        function reset() { 
+            paraguay = 0; brasil = 0; bolivia = 0
+            ultimos = []
+            updateCantidadPorPais() 
+            updateUltimasEntradas()
+        }
+        function agregarUltimaEntrada(pais) {
+            ultimos.unshift(pais)
+            if (ultimos.length > 10) { ultimos.splice(10,1) }
+            updateUltimasEntradas()
+        }
+    </script>
+</head>
+
+<body onload="updateCantidadPorPais()">
+<div>
+    <div style="width: 220px; float: left">
+        <div style="border-width: 3px; border-style: solid; border-color: blue; 
+                    padding: 5px; margin: 5px"
+        >
+            <table>
+                <thead>
+                    <tr>
+                        <th style="text-align: left; padding-right: 10px">País</th>
+                        <th style="text-align: left">Cantidad</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td style="padding-right: 10px">Brasil</td><td id="cantidadBrasil"></td></tr>
+                    <tr><td style="padding-right: 10px">Bolivia</td><td id="cantidadBolivia"></td></tr>
+                    <tr><td style="padding-right: 10px">Paraguay</td><td id="cantidadParaguay"></td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div style="border-width: 3px; border-style: solid; border-color: cornflowerblue;
+                    padding: 5px; margin: 5px">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="text-align: left">Ultimas entradas</th>
+                    </tr>
+                </thead>
+                <tbody id="ultimasEntradas"></tbody>
+            </table>
+        </div>
+    </div>
+    <div style="width: 200px; float: left;  
+        border-width: 3px; border-style: solid; border-color: lightseagreen;
+        padding: 5px; margin: 5px"
+    >
+        <div style="margin-top: 10px; margin-bottom: 10px">
+            <button id="entraDeBrasil" onClick="ingresoBrasil()">Ingreso desde Brasil</button>
+        </div>
+        <div style="margin-bottom: 10px">
+            <button id="entraDeBolivia" onClick="ingresoBolivia()">Ingreso desde Bolivia</button>
+        </div>
+        <div style="margin-bottom: 10px">
+            <button id="entraDeBolivia" onClick="ingresoParaguay()">Ingreso desde Paraguay</button>
+        </div>
+        <div style="margin-bottom: 10px">
+            <button id="resetButton" onClick="reset()">Empezar de cero</button>
+        </div>
+    </div>
+</div>
+</body>
+
+</html>
