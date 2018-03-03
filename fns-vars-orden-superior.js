@@ -23,11 +23,11 @@ function max(n1,n2) {
 function triple(n) { return n * 3 }
 
 // las funciones se pueden asignar a variables
-let triples1 = triples
-let triples2 = function(n) { return n * 3 }
+let triple1 = triple
+let triple2 = function(n) { return n * 3 }
 
 // notacion "arrow function", parecida a los bloques de Java 8, Smalltalk, Wollok, etc..
-let triples3 = ((n) => n * 3)
+let triple3 = ((n) => n * 3)
 
 let a = max(3,4)
 let b = max(a, 28)
@@ -43,7 +43,9 @@ let theArray = [a,b]
 // todos los triples, en dos variantes
 function triples_verbose(numeros) { return numeros.map((n) => n * 3) }
 function triples(numeros) { return numeros.map(triple) }
-function triples_super_verbose(numeros) { return numeros.map((n) => n * 3) }
+function triples_super_verbose(numeros) { 
+  return numeros.map(function(n) { return n * 3 } ) 
+}
 
 // otras
 function mayoresA(numeros,n) { return numeros.filter((nro) => nro > n) }

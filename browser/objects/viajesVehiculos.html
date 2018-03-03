@@ -1,0 +1,280 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+        crossorigin="anonymous">
+    <title>Vehículos y viajes</title>
+    <script>
+    class Vehiculo {
+        constructor(patente, color, cantidadAsientos, velocidadMaxima) {
+            this._cantidadAsientos = cantidadAsientos
+            this._velocidadMaxima = velocidadMaxima
+            this._color = color
+            this._patente = patente
+        }
+        
+        velocidadMaxima() { return this._velocidadMaxima }
+        cantidadAsientos() { return this._cantidadAsientos }
+        color() { return this._color }
+        patente() { return this._patente }
+    }
+    
+    var ultimoViaje = 0
+    class Viaje {
+        constructor(cantidadPasajeros, coloresPreferidos) {
+            ultimoViaje++
+            this._numero = ultimoViaje
+            this._cantidadPasajeros = cantidadPasajeros
+            this._coloresPreferidos = coloresPreferidos
+            this._vehiculoAsignado = null
+        }
+        
+        numero() { return this._numero }
+        cantidadPasajeros() { return this._cantidadPasajeros }
+        coloresPreferidos() { return this._coloresPreferidos ? this._coloresPreferidos : [] }
+        vehiculoAsignado() { return this._vehiculoAsignado }
+        
+        asignarVehiculo(veh) { this._vehiculoAsignado = veh }
+        
+        puedeHacerlo(veh) {
+            return this.esCapacidadAdecuada(veh) && this.esColorAdecuado(veh)
+        }
+        esCapacidadAdecuada(veh) { return veh.cantidadAsientos() >= this.cantidadPasajeros() }
+        esColorAdecuado(veh) {
+            return (this.coloresPreferidos().length == 0) || this.coloresPreferidos().includes(veh.color())
+        }
+    }
+    
+    class Agencia {
+        constructor(nombre) {
+            this._nombre = nombre
+            this._vehiculos = []
+            this._viajes = []
+        }
+        
+        nombre() { return this._nombre }
+        vehiculos() { return this._vehiculos }
+        vehiculosPosiblesParaViaje(viaje) {
+            return this.vehiculos().filter((veh) => viaje.puedeHacerlo(veh))
+        }
+        viajes() { return this._viajes }
+        
+        agregarVehiculos(vehs) { vehs.forEach( veh => {this._vehiculos.push(veh)} ) }
+        cargarViaje(cantidadPasajeros) {
+            this._viajes.push(new Viaje(cantidadPasajeros, null))
+        }
+        cargarViajeConColor(cantidadPasajeros, coloresPreferidos) {
+            this._viajes.push(new Viaje(cantidadPasajeros, coloresPreferidos))
+        }
+    }
+    
+    var colores = { rojo: "Rojo", verde: "Verde", azul: "Azul", gris: "Gris", blanco: "Blanco", negro: "Negro" }
+    var agencia = new Agencia("La primera de Chas")
+    agencia.agregarVehiculos([
+        new Vehiculo("CFK019", colores.rojo, 5, 160), new Vehiculo("MXZ384", colores.gris, 3, 120),
+        new Vehiculo("JPQ903", colores.blanco, 4, 100)
+    ])
+    agencia.cargarViaje(4)
+    agencia.cargarViaje(6)
+    agencia.cargarViajeConColor(2,[colores.verde, colores.blanco, colores.gris])
+    agencia.cargarViajeConColor(4, [colores.gris, colores.negro, colores.rojo])
+    </script>
+
+<script>
+    function createCell() {
+        let cell = document.createElement("td")
+        cell.style.paddingRight = "20px"
+        cell.style.paddingTop = "4px"
+        return cell
+    }
+    function newTableCell(data) {
+        let cell = createCell()
+        cell.innerHTML = data
+        return cell
+    }
+    function newTableNumberCell(data) { 
+        let cell = newTableCell(data.toString()) 
+        cell.style.textAlign = "center"
+        return cell
+    }
+    function newTableListCell(data, contentsIfEmpty = "---") { 
+        let list = data ? data : []
+        if (data.length == 0) { data.push(contentsIfEmpty) }
+        let cell = newTableCell(list.join(", ")) 
+        return cell
+    }
+    function newTableBooleanCell(data) {
+        let dataToShow = data ? "Sí" : "No"
+        let cell = newTableCell(dataToShow) 
+        cell.style.textAlign = "center"
+        return cell
+    }
+    </script>
+
+<script>
+    function cargaInicial() {
+        cargarNombreAgencia()
+        cargarViajes()
+        cargarVehiculos()
+        esconderPosiblesVehiculos()
+    }
+    function cargarNombreAgencia() {
+        document.getElementById("nombreAgencia").innerHTML = agencia.nombre()
+    }
+
+    function cargarViajes() {
+        let tabla = document.getElementById("viajes-body")
+        tabla.innerHTML = []
+        agencia.viajes().forEach((viaje) => {
+            let check = document.createElement("input")
+            check.type = "radio"
+            check.id = "viaje " + viaje.numero().toString()
+            check.name = "viajes"
+            check.onclick = ((event) => { seEligioViaje(viaje) })
+            let checkCell = createCell()
+            checkCell.appendChild(check)
+            
+            let fila = document.createElement("tr")
+            fila.id = "fila viaje " + viaje.numero().toString()
+            fila.appendChild(checkCell)
+            fila.appendChild(newTableNumberCell(viaje.numero()))
+            fila.appendChild(newTableNumberCell(viaje.cantidadPasajeros()))
+            fila.appendChild(newTableListCell(viaje.coloresPreferidos(), "indistinto"))
+            fila.appendChild(newTableBooleanCell(viaje.vehiculoAsignado()))
+            
+            tabla.appendChild(fila)
+        })
+    }
+
+    function destacarFilaViaje(viaje) {
+        // primero todo en negro
+        limpiarDestaqueViajes()
+        // despues la que quiero en azul
+        let fila = document.getElementById("fila viaje " + viaje.numero().toString())
+        fila.style.color = "blue"
+    }
+    
+    function limpiarDestaqueViajes() {        
+        // hacerlo recorriendo los hijos de la tabla
+        agencia.viajes().forEach((viaje) => {
+            let fila = document.getElementById("fila viaje " + viaje.numero().toString())
+            if (fila) { fila.style.color = "black" }
+        })
+    }
+
+    function cargarVehiculos() {
+        let tabla = document.getElementById("vehiculos-body")
+        agencia.vehiculos().forEach((veh) => {
+            let fila = document.createElement("tr")
+            fila.appendChild(newTableCell(veh.patente()))
+            fila.appendChild(newTableCell(veh.color()))
+            fila.appendChild(newTableNumberCell(veh.cantidadAsientos()))
+            fila.appendChild(newTableNumberCell(veh.velocidadMaxima()))
+            
+            tabla.appendChild(fila)
+        })
+    }
+
+    function esconderPosiblesVehiculos() {
+        document.getElementById("contenedor-posiblesVehiculos").hidden = true
+    }
+    
+    function mostrarPosiblesVehiculos(viaje) {
+        document.getElementById("contenedor-posiblesVehiculos").hidden = false
+        let tabla = document.getElementById("posiblesVehiculos-body")
+        // 1. se limpia la tabla
+        tabla.innerHTML = []
+        // 2. se vuelve a llenar
+        agencia.vehiculosPosiblesParaViaje(viaje).forEach((veh) => {
+            let boton = document.createElement("button")
+            boton.onclick = (event) => { seEligeVehiculoParaAsignar(veh, viaje) }
+            boton.innerText = "Asignar"
+
+            let fila = document.createElement("tr")
+            fila.appendChild(newTableCell(veh.patente()))
+            fila.appendChild(newTableCell(veh.color()))
+            fila.appendChild(newTableNumberCell(veh.cantidadAsientos()))
+            fila.appendChild(boton)
+
+            tabla.appendChild(fila)
+        })
+    }
+
+    function seEligioViaje(viaje) {
+        destacarFilaViaje(viaje)
+        mostrarPosiblesVehiculos(viaje)
+        document.getElementById("posiblesVehiculos-idViaje").innerHTML = viaje.numero().toString()
+    }
+
+    function ningunViajeElegido() {
+        cargarVi
+        esconderPosiblesVehiculos()
+    }
+
+    function seEligeVehiculoParaAsignar(veh, viaje) {
+        viaje.asignarVehiculo(veh)
+        ningunViajeElegido()        
+    }
+    </script>
+</head>
+
+<body onload="cargaInicial()">
+    <div style="margin-left: 20px">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+        <h1 style="margin-bottom: 40px" id="nombreAgencia"></h1>
+        <div id="contenedor-viajes-posiblesVehiculos" style="border-color: brown; border-width: 2px; border-style: solid">
+            <h3 style="margin-bottom: 20px">Viajes</h3>
+            <div id="contenedor-viajes" style="width: 700px">
+                <form>
+                    <table id="viajes">
+                        <thead>
+                            <tr>
+                                <th style="text-align: left; padding-right: 20px"></th>
+                                <th style="text-align: left; padding-right: 20px">Número</th>
+                                <th style="text-align: left; padding-right: 20px">Cant. pasajeros</th>
+                                <th style="text-align: left; padding-right: 20px">Colores</th>
+                                <th style="text-align: left; padding-right: 20px">Asignado</th>
+                            </tr>
+                        </thead>
+                        <tbody id="viajes-body">
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+            <div id="contenedor-posiblesVehiculos" style="margin-top: 30px; width: 500px">
+                <h4 style="margin-bottom: 15px">
+                    Viaje <span id="posiblesVehiculos-idViaje"></span> - vehículos que pueden asignarse
+                </h4>
+                <div>
+                    <table id="posiblesVehiculos">
+                        <thead>
+                            <tr>
+                                <th style="text-align: left; padding-right: 20px">Patente</th>
+                                <th style="text-align: left; padding-right: 20px">Color</th>
+                                <th style="text-align: left; padding-right: 20px">Asientos</th>
+                            </tr>
+                        </thead>
+                        <tbody id="posiblesVehiculos-body">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div id="contenedor-vehiculos" style="margin-top: 40px">
+            <h3 style="margin-bottom: 20px">Flota completa</h3>
+            <table id="vehiculos">
+                <thead>
+                    <tr>
+                        <th style="text-align: left; padding-right: 20px">Patente</th>
+                        <th style="text-align: left; padding-right: 20px">Color</th>
+                        <th style="text-align: left; padding-right: 20px">Asientos</th>
+                        <th style="text-align: left; padding-right: 20px">Vel. máxima</th>
+                    </tr>
+                </thead>
+                <tbody id="vehiculos-body">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

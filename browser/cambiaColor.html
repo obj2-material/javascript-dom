@@ -1,0 +1,19 @@
+<html>
+<head>
+    <title>Cambio de color</title>
+    <script>
+    var elColor = null  // empieza sin color definido
+    function cambiaColor() {
+        elColor = (elColor == "blue") ? "red" : "blue"
+        document.getElementById("demo").style.color = elColor
+    }
+    </script>
+</head>
+<body>
+    <p>
+    <span id="demo">Hola</span>
+    </p>
+
+    <button onClick="cambiaColor()">Cambiar color</button>
+</body>
+</html>

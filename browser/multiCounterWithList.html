@@ -3,12 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <title>Registro de ingresos por país</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+        crossorigin="anonymous">
     <script>
+        // estado de la página
         var brasil = 0
         var bolivia = 0
         var paraguay = 0
         var ultimos = []
 
+        // funciones que actualizan el DOM a partir del estado
         function updateCantidadPorPais() {
             document.getElementById("cantidadBrasil").innerHTML = brasil
             document.getElementById("cantidadBolivia").innerHTML = bolivia
@@ -16,7 +20,9 @@
         }
         function updateUltimasEntradas() {
             let tabla = document.getElementById("ultimasEntradas")
+            // 1. se limpia la tabla
             tabla.innerHTML = []
+            // 2. se vuelve a llenar
             ultimos.forEach((pais, ix) => {
                 let fila = document.createElement("tr")
                 let columna = document.createElement("td")
@@ -26,6 +32,8 @@
             })
         }
 
+        // funciones que reacionan ante los eventos de usuario
+        // actualizan el estado, después llaman a las funciones que actualizan el DOM a partir del estado
         function ingresoBrasil() { 
             brasil++
             agregarUltimaEntrada("Brasil")
