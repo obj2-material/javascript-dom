@@ -1,0 +1,175 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+        crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.5/lodash.min.js"></script>         
+         
+    <title>Venta de discos</title>
+
+    <style>
+        .nombreBanda {
+            font-weight: bold; color: indianred
+        }
+        .filaBanda {
+            margin-bottom: 10px
+        }
+    </style>
+    
+    <script>
+        // bandas
+        var dynamo = {nombre: "Dynamo", copiasPorPais: [
+            {pais: "Argentina", copias: 150000}, {pais: "Uruguay", copias: 10000}, 
+            {pais: "Chile", copias: 30000}, {pais: "Mexico", copias: 80000},
+            {pais: "Perú", copias: 18000}
+        ]}
+        var signos = {nombre: "Signos", copiasPorPais: [
+            {pais: "Argentina", copias: 250000}, {pais: "Uruguay", copias: 14000}, 
+            {pais: "Chile", copias: 25000}, {pais: "Mexico", copias: 40000},
+            {pais: "España", copias: 24000}, { pais: "EE.UU.", copias: 72000 }
+        ]}
+        var cancionAnimal = {nombre: "Canción Animal", copiasPorPais: [
+            {pais: "Argentina", copias: 320000}, 
+            {pais: "Chile", copias: 38000}, {pais: "Mexico", copias: 70000},
+            {pais: "España", copias: 42000}, { pais: "Perú", copias: 17000 }
+        ]}
+        var divididos = {nombre: "Divididos por la felicidad", copiasPorPais: [
+            {pais: "Argentina", copias: 70000}, {pais: "Uruguay", copias: 5000}, 
+            { pais: "Bolivia", copias: 3000 }, { pais: "Mexico", copias: 1500 }
+        ]}
+        var afterChabon = {nombre: "After Chabon", copiasPorPais: [
+            {pais: "Argentina", copias: 130000}, {pais: "Uruguay", copias: 16000}, 
+            { pais: "Chile", copias: 2200 }, { pais: "Venezuela", copias: 1200 }
+        ]}
+        var relax = {nombre: "Relax", copiasPorPais: [
+            {pais: "Argentina", copias: 75000}, {pais: "Uruguay", copias: 25000}, 
+            { pais: "Chile", copias: 8500 }, { pais: "Colombia", copias: 10000 }, 
+            { pais: "España", copias: 6000 }
+        ]}
+        var locura = {nombre: "Locura", copiasPorPais: [
+            {pais: "Argentina", copias: 110000}, {pais: "Uruguay", copias: 18000}, 
+            { pais: "Chile", copias: 11500 }, { pais: "Colombia", copias: 3000 }, 
+            { pais: "Ecuador", copias: 1800 }
+        ]}
+        var soda = { nombre: "Soda Stereo", discos: [dynamo, signos, cancionAnimal]}
+        var sumo = { nombre: "Sumo", discos: [divididos, afterChabon]}
+        var virus = { nombre: "Virus", discos: [relax, locura]}
+        var bandas = [soda, sumo, virus]
+    </script>
+
+    <script>
+        // funciones que calculan info
+        function cantidadBandas() { return bandas.length }
+        function cantidadTotalDiscos() {
+            return _.sumBy(bandas, (banda) => banda.discos.length)
+        }
+        function totalCopias() {
+            return _.sumBy(bandas, (banda) => totalCopiasBanda(banda))
+        }
+        function totalCopiasBanda(banda) {
+            return _.sumBy(banda.discos, (disco) => totalCopiasDisco(disco))
+        }
+        function totalCopiasDisco(disco) {
+            return _.sumBy(disco.copiasPorPais, (cxp) => cxp.copias)
+            // return disco.reduce((total, copiasPorPais) => total + copiasPorPais.copias, 0)
+        }
+
+        function paisesDeDisco(disco) {
+            return disco.copiasPorPais.map((cxp) => cxp.pais)
+        }
+        function copiasDiscoPais(disco, pais) {
+            return disco.copiasPorPais.find((cxp) => cxp.pais == pais).copias
+        }
+        function copiasBandaPais(banda, pais) {
+            let discosEnPais = banda.discos.filter((disco) => paisesDeDisco(disco).includes(pais))
+            let copiasDeCadaDisco = discosEnPais.map(
+                function(disco) { return {nombre: disco.nombre, copias: copiasDiscoPais(disco, pais)} } 
+            )
+            return _.sortBy(copiasDeCadaDisco, (nombreYCopias) => nombreYCopias.copias * -1)
+        }
+    </script>
+
+    <script>
+        // funciones que reaccionan ante un evento y/o actualizan la pagina
+        function elegirPais(nombrePais) {
+            document.getElementById("paisElegido").innerHTML = nombrePais
+            document.getElementById("dataSoda").innerHTML = formatearDiscosConCopias(copiasBandaPais(soda, nombrePais))
+            document.getElementById("dataSumo").innerHTML = formatearDiscosConCopias(copiasBandaPais(sumo, nombrePais))
+            document.getElementById("dataVirus").innerHTML = formatearDiscosConCopias(copiasBandaPais(virus, nombrePais))
+        }
+        
+        function formatearDiscosConCopias(discosConCopias) {
+            return discosConCopias.map((dcc) => dcc.nombre + ": " + dcc.copias.toString()).join("  -  ")
+        }
+
+        function completarTotalesGenerales() {
+            document.getElementById("cantBandas").innerHTML = cantidadBandas()
+            document.getElementById("cantDiscos").innerHTML = cantidadTotalDiscos()
+            document.getElementById("totalCopias").innerHTML = totalCopias()
+        }
+    </script>
+</head>
+
+<body onload="completarTotalesGenerales()">
+    <div class="col-md-10 col-md-offset-1">
+        <div class="panel panel-info">
+            <div class="panel-heading"><h3>Totales generales</h3></div>
+            <div class="panel-body">
+                <div style="margin-top: 10px">
+                    <div class="col-md-4">
+                        <ul class="list-group">
+                            <li class="list-group-item list-group-item-success">Bandas</li>
+                            <li class="list-group-item" id="cantBandas"></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <ul class="list-group">
+                            <li class="list-group-item list-group-item-success">Discos</li>
+                            <li class="list-group-item" id="cantDiscos"></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <ul class="list-group">
+                            <li class="list-group-item list-group-item-success">Copias</li>
+                            <li class="list-group-item" id="totalCopias"></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-10 col-md-offset-1">
+        <div class="panel panel-info" style="margin-bottom: 10px">
+            <div class="panel-body">
+                <span style="margin-right: 30px">Mostrar datos de un país</span>
+                <button class="btn btn-primary" style="margin-right: 30px" onclick="elegirPais('Argentina')">Argentina</button>
+                <button class="btn btn-primary" style="margin-right: 30px" onclick="elegirPais('Uruguay')">Uruguay</button>
+                <button class="btn btn-primary" style="margin-right: 30px" onclick="elegirPais('Chile')">Chile</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-10 col-md-offset-1">
+        <div class="panel panel-info" style="padding: 10px; padding-left: 30px">
+            <div class="panel-heading" style="padding-top: 5px; padding-bottom: 5px" >
+                <h4 id="paisElegido"></h4>
+            </div>
+            <div class="panel-body">
+                <div class="row filaBanda">
+                    <div class="col-md-2 nombreBanda">Soda Stereo</div>
+                    <div class="col-md-10" id="dataSoda"></div>
+                </div>
+                <div class="row filaBanda">
+                    <div class="col-md-2 nombreBanda">Virus</div>
+                    <div class="col-md-10" id="dataVirus"></div>
+                </div>
+                <div class="row filaBanda">
+                    <div class="col-md-2 nombreBanda">Sumo</div>
+                    <div class="col-md-10" id="dataSumo"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

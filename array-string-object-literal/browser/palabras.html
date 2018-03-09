@@ -1,0 +1,208 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Estadísticas sobre un texto</title>
+    <style>
+    .titulo {
+        font-weight: bold; color: chocolate
+    }
+    table {
+        border-width: 2px; border-color: darkseagreen; border-style: solid; padding: 5px
+    }
+    </style>
+    <script>
+    const uqbar = [
+        "Debo", "a", "la", "conjunción", "de", "un", "espejo", "y", "de", "una", "enciclopedia", 
+        "el", "descubrimiento", "de", "Uqbar", "El", "espejo", "inquietaba", 
+        "el", "fondo", "de", "un", "corredor", "en", "una", "quinta", 
+        "de", "la", "calle", "Gaona", "en", "Ramos", "Mejía"
+    ]
+    const perseguidor = [
+        "Sonrío", "lo", "mejor", "que", "puedo", "comprendiendo", "vagamente", "que", "tiene", "razón", 
+        "pero", "que", "lo", "que", "él", "sospecha", "y", "lo", "que", "yo", "presiento", 
+        "de", "su", "sospecha", "se", "va", "a", "borrar", "como", "siempre", "apenas", "esté", 
+        "en", "la", "calle", "y", "me", "meta", "en", "mi", "vida", "de", "todos", "los", "días",
+        "o", "en", "otro", "lado"
+    ]
+    const loroPelado = [
+        "Un", "día", "un", "hombre", "bajó", "de", "un", "tiro", "a", "un", "loro", "centinela", 
+        "el", "que", "cayó", "herido", "y", "peleó", "un", "buen", "rato", "antes", 
+        "de", "dejarse", "agarrar", "El", "peón", "lo", "llevó", "a", "la", "casa", 
+        "para", "los", "hijos", "del", "patrón", "y", "los", "chicos", "lo", "curaron", 
+        "porque", "no", "tenía", "más", "que", "un", "ala", "rota"
+    ]
+    const paulina = [
+        "Siempre", "quise", "a", "Paulina", "En", "uno", "de", "mis", "primeros", "recuerdos", 
+        "Paulina", "y", "yo", "estamos", "ocultos", "en", "una", "oscura", "glorieta", 
+        "de", "laureles", "en", "un", "jardín", "con", "dos", "leones", "de", "piedra", 
+        "Paulina", "me", "dijo", "Me", "gusta", "el", "azul", "me", "gustan", "las", "uvas", 
+        "me", "gusta", "el", "hielo", "me", "gustan", "las", "rosas", "me", "gustan", 
+        "los", "caballos", "blancos"
+    ]
+
+    var parrafoActual = null  // nace sin párrafo elegido
+    var autorActual = null
+
+    // funcion que reacciona al evento de pulsar un boton
+    function elegirParrafo(parrafo, autor) {
+        parrafoActual = parrafo
+        autorActual = autor
+        mostrarEstadisticas()
+    }
+
+    // funcion que actualiza la pagina
+    function mostrarEstadisticas() {
+        document.getElementById("autor").innerHTML = autorActual
+        document.getElementById("longitudes").innerHTML 
+            = longitudesParaMostrar(parrafoActual).join(" - ")
+        document.getElementById("cantPalabras").innerHTML = parrafoActual.length
+
+        document.getElementById("longitudMaxima").innerHTML 
+            = palabrasMasLargas(parrafoActual)[0].length
+        document.getElementById("palabrasMasLargas").innerHTML
+            = sinRepetidos(palabrasMasLargas(parrafoActual)).join(", ")
+        document.getElementById("longitudMinima").innerHTML
+            = palabrasMasCortas(parrafoActual)[0].length
+        document.getElementById("palabrasMasCortas").innerHTML
+            = sinRepetidos(palabrasMasCortas(parrafoActual)).join(", ")
+
+        document.getElementById("palabras1a3").innerHTML 
+            = cantidadPalabrasEntre(parrafoActual, 1, 3).toString()
+        document.getElementById("palabras4a6").innerHTML
+            = cantidadPalabrasEntre(parrafoActual, 4, 6).toString()
+        document.getElementById("palabrasMasDe6").innerHTML
+            = cantidadPalabrasEntre(parrafoActual, 7, 1000).toString()            
+
+        document.getElementById("hayConC").innerHTML
+            = hayAlgunaQueEmpieceCon(parrafoActual, "c") ? "Sí" : "No"
+        document.getElementById("hayConJ").innerHTML
+            = hayAlgunaQueEmpieceCon(parrafoActual, "j") ? "Sí" : "No"
+        document.getElementById("hayConO").innerHTML
+            = hayAlgunaQueEmpieceCon(parrafoActual, "o") ? "Sí" : "No"
+        document.getElementById("hayConT").innerHTML
+            = hayAlgunaQueEmpieceCon(parrafoActual, "t") ? "Sí" : "No"
+    }
+
+    // funciones que calculan los datos a mostrar
+    function palabrasDeLongitud(parrafo, long) {
+        return parrafo.filter(palabra => palabra.length == long)
+    }
+    function palabrasMasLargas(parrafo) {
+        let longitudMaxima = 0
+        parrafo.forEach(palabra => longitudMaxima = Math.max(longitudMaxima, palabra.length))
+        return palabrasDeLongitud(parrafo, longitudMaxima)
+    }
+    function palabrasMasCortas(parrafo) {
+        let longitudMinima = 1000
+        parrafo.forEach(palabra => longitudMinima = Math.min(longitudMinima, palabra.length))
+        return palabrasDeLongitud(parrafo, longitudMinima)
+    }
+    function palabrasMasCortas_reduce(parrafo) {
+        let longitudMinima = parrafo.reduce((mini, palabra) => Math.min(mini, palabra.length), 1000)
+        return palabrasDeLongitud(parrafo, longitudMinima)
+    }
+    function cantidadPalabrasEntre(parrafo, longitudMin, longitudMax) {
+        return parrafo.filter(
+            palabra => palabra.length >= longitudMin && palabra.length <= longitudMax
+        ).length
+    }
+
+    function longitudesParaMostrar(parrafo) {
+        return parrafo.map(palabra => palabra.length.toString())
+    }
+
+    function hayAlgunaQueEmpieceCon(parrafo, letraInicial) {
+        return parrafo.some(palabra => palabra.toLowerCase()[0] == letraInicial)
+    }
+
+    // una funcion auxiliar
+    function sinRepetidos(array) {
+        let nuevoArray = []
+        array.forEach(function (elem) { if (!nuevoArray.includes(elem)) { nuevoArray.push(elem) } })
+        return nuevoArray
+    }
+
+    </script>
+</head>
+<body>
+    <div style="margin-bottom: 30px">
+        <h2>Estadísticas sobre un párrafo</h2>
+    </div>
+    <div style="margin-bottom: 30px">
+        <button onclick="elegirParrafo(uqbar, 'Borges')">Borges</button>
+        <button onclick="elegirParrafo(perseguidor, 'Cortázar')">Cortázar</button>
+        <button onclick="elegirParrafo(loroPelado, 'Quiroga')">Quiroga</button>
+        <button onclick="elegirParrafo(paulina, 'Bioy Casares')">Bioy Casares</button>
+    </div>
+    <div>
+        <p>
+            <span class="titulo">Autor</span>: <span id="autor"></span>
+        </p>
+    </div>
+    <div>
+        <p>
+            <span class="titulo">Cantidad de palabras</span>: <span id="cantPalabras"></span>
+        </p>
+    </div>
+    <div>
+        <p>
+            <span class="titulo">Palabras más largas</span> - 
+            <span id="longitudMaxima"></span> letras - <span id="palabrasMasLargas"></span>
+        </p>
+    </div>
+    <div>
+        <p>
+            <span class="titulo">Palabras más cortas</span> -
+            <span id="longitudMinima"></span> letra(s) - <span id="palabrasMasCortas"></span>
+        </p>
+    </div>
+    <div>
+        <p style="margin-bottom: 4px"><span class="titulo">Todas las longitudes</span></p>
+        <p style="margin-top: 4px"><span id="longitudes"></span></p>
+    </div>
+
+    <div style="margin-top: 30px; margin-bottom: 30px; overflow: auto">
+        <div style="float: left; margin-right: 60px">
+            <table>
+                <thead>
+                    <tr><th style="padding-right: 40px">Letras</th><th>Cant. palabras</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>1 a 3</td><td><span id="palabras1a3"></span></td></tr>
+                    <tr><td>4 a 6</td><td><span id="palabras4a6"></span></td></tr>
+                    <tr><td>7 o más</td><td><span id="palabrasMasDe6"></span></td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div style="float: left">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="padding-right: 40px">Letra inicial</th>
+                        <th>Hay palabras</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>c</td>
+                        <td><span id="hayConC"></span></td>
+                    </tr>
+                    <tr>
+                        <td>j</td>
+                        <td><span id="hayConJ"></span></td>
+                    </tr>
+                    <tr>
+                        <td>o</td>
+                        <td><span id="hayConO"></span></td>
+                    </tr>
+                    <tr>
+                        <td>t</td>
+                        <td><span id="hayConT"></span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div style="clear:left">Es un servicio de estadísticas literarias inc.</div>
+</body>
+</html>
