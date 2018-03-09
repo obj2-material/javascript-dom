@@ -15,6 +15,8 @@ function mayoresA(numeros,n) { return numeros.filter((nro) => nro > n) }
 function esListaAcotada(numeros,min,max) {
   return numeros.every((n) => (n >= min) && (n <= max) )
 }
+
+// manipulacion de elementos
 function mandarElPrimeroAtras(arr) {
     let newArray = arr.slice(1)
     newArray.push(arr[0])
