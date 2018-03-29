@@ -17,7 +17,7 @@
     </style>
     
     <script>
-        // bandas
+        // discos
         var dynamo = {nombre: "Dynamo", copiasPorPais: [
             {pais: "Argentina", copias: 150000}, {pais: "Uruguay", copias: 10000}, 
             {pais: "Chile", copias: 30000}, {pais: "Mexico", copias: 80000},
@@ -51,9 +51,12 @@
             { pais: "Chile", copias: 11500 }, { pais: "Colombia", copias: 3000 }, 
             { pais: "Ecuador", copias: 1800 }
         ]}
+        // bandas
         var soda = { nombre: "Soda Stereo", discos: [dynamo, signos, cancionAnimal]}
         var sumo = { nombre: "Sumo", discos: [divididos, afterChabon]}
         var virus = { nombre: "Virus", discos: [relax, locura]}
+
+        // base de bandas
         var bandas = [soda, sumo, virus]
     </script>
 
@@ -116,15 +119,16 @@
             <div class="panel-heading"><h3>Totales generales</h3></div>
             <div class="panel-body">
                 <div style="margin-top: 10px">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <ul class="list-group">
                             <li class="list-group-item list-group-item-success">Bandas</li>
                             <li class="list-group-item" id="cantBandas"></li>
+                            <li class="list-group-item">hola</li>
                         </ul>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-5">
                         <ul class="list-group">
-                            <li class="list-group-item list-group-item-success">Discos</li>
+                            <li class="list-group-item list-group-item-warning">Discos</li>
                             <li class="list-group-item" id="cantDiscos"></li>
                         </ul>
                     </div>

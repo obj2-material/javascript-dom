@@ -40,13 +40,16 @@
         "los", "caballos", "blancos"
     ]
 
+    /* estado del controlador */
     var parrafoActual = null  // nace sin párrafo elegido
     var autorActual = null
 
     // funcion que reacciona al evento de pulsar un boton
     function elegirParrafo(parrafo, autor) {
+        // primero actualizo el "estado del controlador"
         parrafoActual = parrafo
         autorActual = autor
+        // llamo a la funcion que actualiza la pagina
         mostrarEstadisticas()
     }
 
@@ -81,6 +84,8 @@
             = hayAlgunaQueEmpieceCon(parrafoActual, "o") ? "Sí" : "No"
         document.getElementById("hayConT").innerHTML
             = hayAlgunaQueEmpieceCon(parrafoActual, "t") ? "Sí" : "No"
+
+        document.getElementById("textoCompleto").innerHTML = parrafoActual.join(" ")
     }
 
     // funciones que calculan los datos a mostrar
@@ -203,6 +208,9 @@
             </table>
         </div>
     </div>
-    <div style="clear:left">Es un servicio de estadísticas literarias inc.</div>
+    <div style="clear:left">
+        <div id="textoCompleto"></div>
+    </div>
+    <div style="margin-top: 30px">Es un servicio de estadísticas literarias inc.</div>
 </body>
 </html>

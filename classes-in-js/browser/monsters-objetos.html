@@ -1,0 +1,121 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+        crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.5/lodash.min.js"></script>
+    
+    <title>Venta de discos - con objetos</title>
+
+    <style>
+        .nombreBanda {
+            font-weight: bold;
+            color: indianred
+        }
+    
+        .filaBanda {
+            margin-bottom: 10px
+        }
+    </style>
+
+    <script src="./monsters-dominio.js"></script>
+
+    <script>
+        // funciones que reaccionan ante un evento y/o actualizan la pagina
+        function elegirPais(nombrePais) {
+            document.getElementById("paisElegido").innerHTML = nombrePais
+            document.getElementById("dataSoda").innerHTML = formatearDiscosConCopias(
+                base.bandaConNombre("Soda Stereo"), nombrePais
+            )
+            document.getElementById("dataSumo").innerHTML = formatearDiscosConCopias(
+                base.bandaConNombre("Sumo"), nombrePais
+            )
+            document.getElementById("dataVirus").innerHTML = formatearDiscosConCopias(
+                base.bandaConNombre("Virus"), nombrePais
+            )
+            document.getElementById("infoDePaisElegido").style.visibility = "visible"
+        }
+
+        function formatearDiscosConCopias(_banda, _pais) {
+            let discosOrdenados = _.sortBy(
+                _banda.discosConVentasEnPais(_pais), 
+                disco => disco.copiasVendidasEnPais(_pais) * -1
+            )
+            return discosOrdenados
+                .map((disco) => disco.nombre() + ": " + disco.copiasVendidasEnPais(_pais).toString())
+                .join("  -  ")
+        }
+
+        function completarTotalesGenerales() {
+            document.getElementById("cantBandas").innerHTML = base.cantidadBandas()
+            document.getElementById("cantDiscos").innerHTML = base.cantidadTotalDiscos()
+            document.getElementById("totalCopias").innerHTML = base.totalCopias()
+        }
+    </script>
+</head>
+
+<body onload="completarTotalesGenerales()">
+    <div class="col-md-10 col-md-offset-1">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h3>Totales generales</h3>
+            </div>
+            <div class="panel-body">
+                <div style="margin-top: 10px">
+                    <div class="col-md-4">
+                        <ul class="list-group">
+                            <li class="list-group-item list-group-item-success">Bandas</li>
+                            <li class="list-group-item" id="cantBandas"></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <ul class="list-group">
+                            <li class="list-group-item list-group-item-success">Discos</li>
+                            <li class="list-group-item" id="cantDiscos"></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <ul class="list-group">
+                            <li class="list-group-item list-group-item-success">Copias</li>
+                            <li class="list-group-item" id="totalCopias"></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-10 col-md-offset-1">
+        <div class="panel panel-info" style="margin-bottom: 10px">
+            <div class="panel-body">
+                <span style="margin-right: 30px">Mostrar datos de un país</span>
+                <button class="btn btn-primary" style="margin-right: 30px" onclick="elegirPais('Argentina')">Argentina</button>
+                <button class="btn btn-primary" style="margin-right: 30px" onclick="elegirPais('Uruguay')">Uruguay</button>
+                <button class="btn btn-primary" style="margin-right: 30px" onclick="elegirPais('Chile')">Chile</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-10 col-md-offset-1" id="infoDePaisElegido" style="visibility: hidden">
+        <div class="panel panel-info" style="padding: 10px; padding-left: 30px">
+            <div class="panel-heading" style="padding-top: 5px; padding-bottom: 5px">
+                <h4 id="paisElegido"></h4>
+            </div>
+            <div class="panel-body">
+                <div class="row filaBanda">
+                    <div class="col-md-2 nombreBanda">Soda Stereo</div>
+                    <div class="col-md-10" id="dataSoda"></div>
+                </div>
+                <div class="row filaBanda">
+                    <div class="col-md-2 nombreBanda">Virus</div>
+                    <div class="col-md-10" id="dataVirus"></div>
+                </div>
+                <div class="row filaBanda">
+                    <div class="col-md-2 nombreBanda">Sumo</div>
+                    <div class="col-md-10" id="dataSumo"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+        crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.5/lodash.min.js"></script>
+    
+    <title>Información sobre vuelos y aviones</title>
+
+    <script src="./ventas-aereas-dominio.js"></script>
+
+    <script>
+    var avionElegido = null
+
+    function elegirAvion(nombreAvion) {
+        avionElegido = elStore.avionConNombre(nombreAvion)
+        completarDatosAvionElegido()
+    }
+    
+    function completarDatosAvionElegido() { 
+        document.getElementById("nombreAvionElegido").innerHTML = avionElegido.nombre() 
+        document.getElementById("cantidadVuelosAvionElegido").innerHTML = avionElegido.cantidadVuelosHechos()
+        document.getElementById("cantidadAsientosAvionElegido").innerHTML = avionElegido.cantidadAsientos()
+        document.getElementById("cantidadPasajerosAvionElegido").innerHTML = avionElegido.cantidadTotalPasajeros()
+        document.getElementById("porcentajeOcupacionAvionElegido").innerHTML = avionElegido.porcentajeOcupacion()
+    }
+
+    function cargarTablaVuelos() {
+        const tablaACargar = document.getElementById("tablaVuelos")
+        tablaACargar.innerHTML = []     // la vacio antes de empezar
+        elStore.vuelos().forEach(vuelo => { 
+            let newRow = tablaACargar.insertRow()
+            addColumn(newRow, vuelo.tipoAsString())
+            addColumn(newRow, vuelo.origen())
+            addColumn(newRow, vuelo.destino())
+            addColumn(newRow, vuelo.cantidadAsientosLibres())
+            addColumn(newRow, vuelo.precioPasaje())
+            addColumn(newRow, vuelo.cantidadPasajesEmitidos())
+            addColumn(newRow, vuelo.importeTotalPasajesEmitidos())
+        })
+    }
+
+    function addColumn(row, string) {
+        let newCell = row.insertCell()
+        newCell.innerHTML = string
+    }
+
+    </script>
+</head>
+
+<body onload="elegirAvion('Airbus 330'); completarDatosAvionElegido(); cargarTablaVuelos()">
+    <div class="container" style="margin-left: 20px; margin-right: 20px">
+    
+        <!--  datos del avion elegido -->
+        <div class="panel panel-info" style="margin-top: 10px">
+            <div class="panel-heading">
+                <h4>Avión <span id="nombreAvionElegido"></span></h4>
+            </div>
+            <div class="panel-body">
+                <div class="row" style="margin-bottom: 5px">
+                    <div class="col-md-3" style="font-weight: bold">Cantidad de vuelos</div>
+                    <div class="col-md-9"><span id="cantidadVuelosAvionElegido"></span></div>
+                </div>
+                <div class="row" style="margin-bottom: 5px">
+                    <div class="col-md-3" style="font-weight: bold">Capacidad</div>
+                    <div class="col-md-9"><span id="cantidadAsientosAvionElegido"></span></div>
+                </div>
+                <div class="row" style="margin-bottom: 5px">
+                    <div class="col-md-3" style="font-weight: bold">Pasajeros transportados</div>
+                    <div class="col-md-9"><span id="cantidadPasajerosAvionElegido"></span></div>
+                </div>
+                <div class="row" style="margin-bottom: 5px">
+                    <div class="col-md-3" style="font-weight: bold">Porcentaje de ocupación</div>
+                    <div class="col-md-9"><span id="porcentajeOcupacionAvionElegido"></span></div>
+                </div>
+            </div>
+        </div>
+    
+        <!-- seleccion de avion -->
+        <div class="panel panel-info">
+            <div class="panel-body">
+                <div class="text-center">
+                    <button class="btn btn-info" style="margin-left: 10px; margin-right: 10px" onClick="elegirAvion('Airbus 330')"> Airbus 330
+                    </button>
+                    <button class="btn btn-info" style="margin-left: 10px; margin-right: 10px" onClick="elegirAvion('Boeing 737')"> Boeing 737
+                    </button>
+                    <button class="btn btn-info" style="margin-left: 10px; margin-right: 10px" onClick="elegirAvion('Embraer 190')"> Embraer 190
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- tabla de vuelos -->
+        <div class="panel panel-success" style="margin-top: 50px">
+            <div class="panel-heading">
+                <h4>Vuelos (de todos los aviones)</h4>
+            </div>
+            <div class="panel-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Tipo de vuelo</th>
+                            <th>Origen</th>
+                            <th>Destino</th>
+                            <th>Asientos libres</th>
+                            <th>Precio pasaje</th>
+                            <th>Pasajes vendidos</th>
+                            <th>Importe total vendido</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaVuelos">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,86 @@
+<html>
+
+<head>
+    <title>Golondrinas</title>
+    <script>
+    class Golondrina {
+        constructor() { this._energia = 0 }
+        energia() { return this._energia }
+        comer(gramos) { this._energia += gramos * 4 }
+        volar(kms) { this._energia -= kms + 10 }
+    }
+
+
+    const pepita = new Golondrina()
+    pepita.comer(30)
+    const juanita = new Golondrina()
+    juanita.comer(20)
+    </script>
+
+    <script>
+    function mostrarEnergias() {
+        document.getElementById("energiaPepita").innerHTML = pepita.energia()
+        document.getElementById("energiaJuanita").innerHTML = juanita.energia()
+    }
+    function comePepita() {
+        let cuantoCome = numeroSiEsNumero(document.getElementById("cuantoComePepita").value)
+        if (cuantoCome) {
+            pepita.comer(cuantoCome)
+            mostrarEnergias()
+            document.getElementById("cuantoComePepita").value = ""
+        }
+    }
+    function vuelaPepita() {
+        let cuantoVuela = numeroSiEsNumero(document.getElementById("cuantoVuelaPepita").value)
+        if (cuantoVuela) {
+            pepita.volar(cuantoVuela)
+            mostrarEnergias()
+            document.getElementById("cuantoVuelaPepita").value = ""
+        }
+    }
+    function comeJuanita() {
+        let cuantoCome = numeroSiEsNumero(document.getElementById("cuantoComeJuanita").value)
+        if (cuantoCome) {
+            juanita.comer(cuantoCome)
+            mostrarEnergias()
+            document.getElementById("cuantoComeJuanita").value = ""
+        }
+    }
+    function vuelaJuanita() {
+        let cuantoVuela = numeroSiEsNumero(document.getElementById("cuantoVuelaJuanita").value)
+        if (cuantoVuela) {
+            juanita.volar(cuantoVuela)
+            mostrarEnergias()
+            document.getElementById("cuantoVuelaJuanita").value = ""
+        }
+    }
+    function numeroSiEsNumero(string) {
+        return (string && Number(string)) ? Number(string) : null
+    }
+    </script>
+</head>
+
+<body onload="mostrarEnergias()" >
+    <div style="margin-left: 20px; margin-top: 40px; overflow: auto">
+        <div style="float: left; width: 15%; font-weight: bold">Energía de Pepita</div>
+        <div style="float: left" id="energiaPepita"></div>
+    </div>
+    <div style="margin-left: 20px; clear: left; margin-top: 20px; overflow: auto">
+        <input id="cuantoComePepita" style="width: 60px">
+        <button onclick="comePepita()" style="margin-left: 10px; margin-right: 100px">Come Pepita</button>
+        <input id="cuantoVuelaPepita" style="width: 60px">
+        <button onclick="vuelaPepita()" style="margin-left: 10px">Vuela Pepita</button>
+    </div>
+    <div style="margin-left: 20px; clear: left; margin-top: 50px; overflow: auto">
+        <div style="float: left; width: 15%; font-weight: bold">Energía de Juanita</div>
+        <div style="float: left" id="energiaJuanita"></div>
+    </div>
+    <div style="margin-left: 20px; clear: left; margin-top: 20px; overflow: auto">
+        <input id="cuantoComeJuanita" style="width: 60px">
+        <button onclick="comeJuanita()" style="margin-left: 10px; margin-right: 100px">Come Juanita</button>
+        <input id="cuantoVuelaJuanita" style="width: 60px">
+        <button onclick="vuelaJuanita()" style="margin-left: 10px">Vuela Juanita</button>
+    </div>
+</body>
+
+</html>
