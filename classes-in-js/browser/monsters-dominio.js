@@ -76,30 +76,37 @@ class BaseDeBandas {
 }
 
 let soda = new Banda("Soda Stereo")
-soda.agregarDisco(new Disco("Dynamo").agregarMuchasCopiasVendidas([
+soda.agregarDisco(new Disco("Dynamo", 1986).agregarMuchasCopiasVendidas([
     "Argentina", 150000, "Uruguay", 10000, "Chile", 30000, "Mexico", 80000, "Perú", 18000
 ]))
-soda.agregarDisco(new Disco("Signos").agregarMuchasCopiasVendidas([
+soda.agregarDisco(new Disco("Signos", 1989).agregarMuchasCopiasVendidas([
     "Argentina", 250000, "Uruguay", 14000, "Chile", 25000, "Mexico", 40000,
     "España", 24000, "EE.UU.", 72000
 ]))
-soda.agregarDisco(new Disco("Canción Animal").agregarMuchasCopiasVendidas([
+soda.agregarDisco(new Disco("Canción Animal", 1991).agregarMuchasCopiasVendidas([
     "Argentina", 320000, "Chile", 38000, "Mexico", 70000, "España", 42000, "Perú", 17000
 ]))
 let sumo = new Banda("Sumo")
-sumo.agregarDisco(new Disco("Divididos por la felicidad").agregarMuchasCopiasVendidas([
+sumo.agregarDisco(new Disco("Divididos por la felicidad", 1984).agregarMuchasCopiasVendidas([
     "Argentina", 70000, "Uruguay", 5000, "Bolivia", 3000, "Mexico", 1500
 ]))
-sumo.agregarDisco(new Disco("After Chabon").agregarMuchasCopiasVendidas([
+sumo.agregarDisco(new Disco("After Chabon", 1985).agregarMuchasCopiasVendidas([
     "Argentina", 130000, "Uruguay", 16000, "Chile", 2200, "Venezuela", 1200
 ]))
 let virus = new Banda("Virus")
-virus.agregarDisco(new Disco("Relax").agregarMuchasCopiasVendidas([
+virus.agregarDisco(new Disco("Relax", 1987).agregarMuchasCopiasVendidas([
     "Argentina", 75000, "Uruguay", 25000, "Chile", 8500, "Colombia", 10000, "España", 6000
 ]))
-virus.agregarDisco(new Disco("Locura").agregarMuchasCopiasVendidas([
+virus.agregarDisco(new Disco("Locura", 1991).agregarMuchasCopiasVendidas([
     "Argentina", 110000, "Uruguay", 18000, "Chile", 11500, "Colombia", 3000, "Ecuador", 1800
 ]))
+let redondos = new Banda("Patricio Rey y sus Redonditos de Ricota")
+redondos.agregarDisco(new Disco("Gulp", 1984).agregarMuchasCopiasVendidas([
+    "Argentina", 48000, "Uruguay", 3000
+]))
+redondos.agregarDisco(new Disco("Oktubre", 1986).agregarMuchasCopiasVendidas([
+    "Argentina", 114000, "Uruguay", 8600, "Perú", 3200, "Chile", 820
+]))
 
-var base = new BaseDeBandas([soda, sumo, virus])    
+var base = new BaseDeBandas([soda, sumo, virus, redondos])    
 
