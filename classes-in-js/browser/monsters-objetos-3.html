@@ -1,0 +1,418 @@
+<!-- 2246267389 -->
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+        crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.5/lodash.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    
+    <title>Venta de discos - 3</title>
+
+    <style>
+        .nombreBanda {
+            font-weight: bold;
+            color: indianred
+        }
+
+        .nombreDisco {
+            font-weight: bold;
+            font-size: 18px;
+            color: indianred
+        }
+    
+        .filaBanda {
+            margin-bottom: 10px
+        }
+
+        .recuadro {
+            border-width: 1px; border-style: solid; border-color: blue; border-radius: 5px;
+            padding-left: 30px; padding-right: 30px; padding-top: 20px; padding-bottom: 20px;
+            margin-left: 0px; margin-right: 0px;            
+        }
+        .labelDato {
+            margin-right: 10px; font-weight: bold;
+        }
+        .celdaTablaInfo {
+            border-width: 1px; border-style: solid; border-color: deepskyblue;
+            padding-left: 12px; padding-right: 12px; padding-top: 8px; padding-bottom: 8px;
+        }
+        .aLaDerechaDeH4 {
+            margin-top: 10px;
+        }
+    </style>
+
+    <script src="./monsters-dominio.js"></script>
+
+    <script>
+        let soda = new Banda("Soda Stereo")
+        soda.agregarDisco(new Disco("Dynamo", 1986).agregarMuchasCopiasVendidas([
+            "Argentina", 150000, "Uruguay", 10000, "Chile", 30000, "Mexico", 80000, "Perú", 18000
+        ]))
+        soda.agregarDisco(new Disco("Signos", 1989).agregarMuchasCopiasVendidas([
+            "Argentina", 250000, "Uruguay", 14000, "Chile", 25000, "Mexico", 40000,
+            "España", 24000, "EE.UU.", 72000 
+        ]))
+        soda.agregarDisco(new Disco("Canción Animal", 1991).agregarMuchasCopiasVendidas([
+            "Argentina",  320000, "Chile", 38000, "Mexico", 70000, "España", 42000, "Perú",17000 
+        ]))
+        let sumo = new Banda("Sumo")
+        sumo.agregarDisco(new Disco("Divididos por la felicidad", 1984).agregarMuchasCopiasVendidas([
+                "Argentina", 70000, "Uruguay", 5000, "Bolivia", 3000, "Mexico", 1500 
+        ]))
+        sumo.agregarDisco(new Disco("After Chabon", 1985).agregarMuchasCopiasVendidas([
+            "Argentina", 130000, "Uruguay", 16000, "Chile",2200, "Venezuela", 1200 
+        ]))
+        let virus = new Banda("Virus")
+        virus.agregarDisco(new Disco("Relax", 1987).agregarMuchasCopiasVendidas([
+            "Argentina", 75000, "Uruguay",25000, "Chile", 8500, "Colombia", 10000, "España", 6000 
+        ]))
+        virus.agregarDisco(new Disco("Locura", 1991).agregarMuchasCopiasVendidas([
+            "Argentina", 110000, "Uruguay", 18000, "Chile", 11500, "Colombia", 3000, "Ecuador", 1800
+        ]))
+        let redondos = new Banda("Patricio Rey y sus Redonditos de Ricota")
+        redondos.agregarDisco(new Disco("Gulp", 1984).agregarMuchasCopiasVendidas([
+            "Argentina", 48000, "Uruguay", 3000
+        ]))
+        redondos.agregarDisco(new Disco("Oktubre", 1986).agregarMuchasCopiasVendidas([
+            "Argentina", 114000, "Uruguay", 8600, "Perú", 3200, "Chile", 820
+        ]))
+
+        var base = new BaseDeBandas([soda, sumo, virus, redondos])    
+    </script>
+
+    <script>
+        // funciones que reaccionan ante un evento y/o actualizan la pagina
+        function mostrarPaises() {
+            deseleccionarBandaElegida()
+            document.getElementById("infoPaises").style.display = "block"
+            document.getElementById("infoBandas").style.display = "none"
+        }
+        function mostrarBandas() {
+            deseleccionarPaisElegido()
+            document.getElementById("infoPaises").style.display = "none"
+            document.getElementById("infoBandas").style.display = "block"
+        }
+
+        function elegirPais(nombrePais) {
+            document.getElementById("paisElegido").innerHTML = nombrePais
+            document.getElementById("totalCopiasPaisElegido").innerHTML 
+                = base.totalCopiasVendidasEnPais(nombrePais).toString() 
+            
+            document.getElementById("dataSoda").innerHTML = formatearDiscosConCopias(
+                base.bandaConNombre("Soda Stereo"), nombrePais
+            )
+            document.getElementById("dataSumo").innerHTML = formatearDiscosConCopias(
+                base.bandaConNombre("Sumo"), nombrePais
+            )
+            document.getElementById("dataVirus").innerHTML = formatearDiscosConCopias(
+                base.bandaConNombre("Virus"), nombrePais
+            )
+            
+            document.getElementById("infoPaisElegido").style.visibility = "visible"
+        }
+        function deseleccionarPaisElegido() {
+            document.getElementById("infoPaisElegido").style.visibility = "hidden"
+        }
+
+        function formatearDiscosConCopias(_banda, _pais) {
+            let discosOrdenados = _.sortBy(
+                _banda.discosConVentasEnPais(_pais), 
+                disco => disco.copiasVendidasEnPais(_pais) * -1
+            )
+            return discosOrdenados
+                .map((disco) => disco.nombre() + ": " + disco.copiasVendidasEnPais(_pais).toString())
+                .join("  -  ")
+        }
+
+        function completarLinksBandas() {
+            base.bandas().forEach(banda => agregarLinkBanda(banda))
+        }
+        function agregarLinkBanda(banda) {
+            let recuadroBandas = document.getElementById("linksBandas")
+            let fila = document.createElement("p")
+            let link = document.createElement("a")
+            link.href = "#"
+            link.onclick = function(event) { elegirBanda(banda.nombre()) }
+            // let link = document.createElement("span")
+            link.innerHTML = banda.nombre()
+            fila.appendChild(link)
+            recuadroBandas.appendChild(fila)
+        }
+
+        function elegirBanda(nombreBanda) {
+            const banda = base.bandaConNombre(nombreBanda)
+            document.getElementById("bandaElegida").innerHTML = banda.nombre()
+            document.getElementById("totalCopiasBandaElegida").innerHTML 
+                    = banda.totalCopias().toString()
+            completarDiscosBanda(banda)
+            document.getElementById("infoBandaElegida").style.visibility = "visible"
+        }
+        function deseleccionarBandaElegida() {
+            document.getElementById("infoBandaElegida").style.visibility = "hidden"
+        }
+
+        function completarDiscosBanda(banda) {
+            const divDatosDiscos = document.getElementById("infoDiscosBandaElegida")
+            divDatosDiscos.innerHTML = []
+            banda.discos().forEach(function(disco) {
+                divDatosDiscos.appendChild(buildRecuadroDisco(disco))
+            })
+        }
+
+        class DomElementModel {
+            constructor(tagName, parent = null) {
+                this._tagName = tagName
+                this._children = []
+                this._classNames = []
+                this._styles = new Map()
+                if (parent) {
+                    parent.addChild(this)
+                    this._parent = parent
+                }
+            }
+            createDomElement() { 
+                const elem = this.createBasicDomElement()
+                this.addClassesToElement(elem)
+                this.addChildrenToElement(elem)
+                this.setStylesToElement(elem)
+                return elem
+            }
+            createBasicDomElement() { return document.createElement(this._tagName) }
+            addChild(element) { this._children.push(element); return this }
+            addClass(className) { this._classNames.push(className); return this }
+            setStyle(styleName, styleValue) { this._styles.set(styleName, styleValue); return this }
+
+            addClassesToElement(domElement) {
+                this._classNames.forEach(className => domElement.classList.add(className))
+            }
+
+            addChildrenToElement(domElement) {
+                this._children.forEach(childElementModel => domElement.appendChild(childElementModel.createDomElement()))
+            }
+            
+            setStylesToElement(domElement) {
+                this._styles.forEach((value, key) => domElement.style[key] = value)
+            }
+        }
+
+        class DomElementModelWithDatum extends DomElementModel {
+            constructor(tag, parent, datum) {
+                super(tag, parent)
+                this._datum = datum
+            }
+
+            createBasicDomElement() {
+                const domElem = super.createBasicDomElement()
+                domElem.innerHTML = this._datum
+                return domElem
+            }
+        }
+
+        class DivElement extends DomElementModel {
+            constructor(parent = null) { super("div", parent) }
+        }
+
+        class DivRow extends DivElement {
+            constructor(parent = null) {
+                super(parent)
+                this.addClass("row")
+            }
+        }
+
+        class DivColumn extends DivElement {
+            constructor(parent, columnCount) {
+                super(parent)
+                this.addClass("col-md-" + columnCount)
+            }
+        }
+
+        class SpanWithDatum extends DomElementModelWithDatum {
+            constructor(parent, datum) { super("span", parent, datum) }
+        }
+
+        class TableDomElement extends DomElementModel {
+            constructor(parent) { super("table", parent) }
+        }
+
+        class TableRow extends DomElementModel {
+            constructor(parent) { super("tr", parent) }
+        }
+
+        class TableCellWithDatum extends DomElementModelWithDatum {
+            constructor(parent, datum) { super("td", parent, datum) }
+        }
+        
+
+        function buildRecuadroDisco(disco) {
+            const recuadroDisco = new DivElement().addClass("recuadro")
+            const filaNombreAnio = new DivRow(recuadroDisco)
+            const contenedorNombreDisco = new DivColumn(filaNombreAnio, 6)
+            new SpanWithDatum(contenedorNombreDisco, disco.nombre()).addClass("nombreDisco")
+
+            const contenedorAnioDisco = new DivColumn(filaNombreAnio, 6)
+            contenedorAnioDisco.setStyle("marginTop", "2px")
+            new SpanWithDatum(contenedorAnioDisco, "Año de lanzamiento").addClass("labelDato")
+            new SpanWithDatum(contenedorAnioDisco, disco.anio().toString())
+
+            const filaTotalCopiasDisco = new DivRow(recuadroDisco)
+            filaTotalCopiasDisco.setStyle("marginTop", "2px")
+            const contenedorTotalCopiasDisco = new DivColumn(filaTotalCopiasDisco, 12)
+            new SpanWithDatum(contenedorTotalCopiasDisco, "Total copias vendidas").addClass("labelDato")
+            new SpanWithDatum(contenedorTotalCopiasDisco, disco.totalCopias().toString())
+
+            const filaTituloCopiasPorPais = new DivRow(recuadroDisco)
+            filaTituloCopiasPorPais.setStyle("marginTop", "12px")
+            const contenedorTituloCopiasPorPais = new DivColumn(filaTituloCopiasPorPais, 12)
+            new SpanWithDatum(contenedorTituloCopiasPorPais, "Copias vendidas por país")
+                .setStyle("fontWeight", "bold").setStyle("color", "royalblue")
+
+            const filaCopiasPorPais = new DivRow(recuadroDisco)
+            filaCopiasPorPais.setStyle("marginTop", "6px")
+            const contenedorCopiasPorPais = new DivColumn(filaCopiasPorPais, 12)
+
+            const cuadroCopiasPorPais = new TableDomElement(contenedorCopiasPorPais)
+            const filaNombresPaises = new TableRow(cuadroCopiasPorPais)
+            const filaCopias = new TableRow(cuadroCopiasPorPais)
+            disco.paisesConRegistroDeCopias().forEach(nombrePais => {
+                new TableCellWithDatum(filaNombresPaises, nombrePais).addClass("celdaTablaInfo")
+                new TableCellWithDatum(filaCopias, disco.copiasVendidasEnPais(nombrePais)).addClass("celdaTablaInfo")
+            })
+
+            return recuadroDisco.createDomElement()
+        }
+
+        function completarInformacionInicial() {
+            completarTotalesGenerales()
+            completarLinksBandas()
+        }
+        function completarTotalesGenerales() {
+            document.getElementById("cantBandas").innerHTML = base.cantidadBandas()
+            document.getElementById("cantDiscos").innerHTML = base.cantidadTotalDiscos()
+            document.getElementById("totalCopias").innerHTML = base.totalCopias()
+        }
+    </script>
+</head>
+
+<body onload="completarInformacionInicial()">
+
+    <div class="col-md-10 col-md-offset-1" id="totalesGenerales">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h3>Totales generales</h3>
+            </div>
+            <div class="panel-body">
+                <div style="margin-top: 10px">
+                    <div class="col-md-4">
+                        <ul class="list-group">
+                            <li class="list-group-item list-group-item-success">Bandas</li>
+                            <li class="list-group-item" id="cantBandas"></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <ul class="list-group">
+                            <li class="list-group-item list-group-item-success">Discos</li>
+                            <li class="list-group-item" id="cantDiscos"></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <ul class="list-group">
+                            <li class="list-group-item list-group-item-success">Copias</li>
+                            <li class="list-group-item" id="totalCopias"></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>  <!--/ totalesGenerales -->
+
+    <div id="seleccionPaisesBandas">
+        <div class="col-md-10 col-md-offset-1" style="margin-bottom: 10px">
+            <div class="row recuadro" 
+                    style="border-color: darkturquoise;">
+                <div class="col-md-6" style="text-align: center;">
+                    <button onclick="mostrarPaises()" class="btn btn-info" style="width: 90%;">
+                        Información sobre países
+                    </button>
+                </div>
+                <div class="col-md-6" style="text-align: center;">
+                    <button onclick="mostrarBandas()" class="btn btn-info" style="width: 90%">
+                        Información sobre bandas
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="infoPaises" style="display: none">
+        <div class="col-md-10 col-md-offset-1">
+            <div class="panel panel-info" style="margin-bottom: 10px">
+                <div class="panel-body">
+                    <span style="margin-right: 30px">Mostrar datos de un país</span>
+                    <button class="btn btn-primary" style="margin-right: 30px" onclick="elegirPais('Argentina')">Argentina</button>
+                    <button class="btn btn-primary" style="margin-right: 30px" onclick="elegirPais('Uruguay')">Uruguay</button>
+                    <button class="btn btn-primary" style="margin-right: 30px" onclick="elegirPais('Chile')">Chile</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-10 col-md-offset-1" id="infoPaisElegido" style="visibility: hidden">
+            <div class="panel panel-info">
+                <div class="panel-heading" style="padding-top: 5px; padding-bottom: 5px">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <h4 id="paisElegido"></h4>
+                        </div>
+                        <div class="col-md-8 aLaDerechaDeH4">
+                            <span class="labelDato">Total de copias vendidas (todas las bandas)</span>
+                            <span id="totalCopiasPaisElegido"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body" style="padding: 10px; padding-left: 30px; padding-top: 20px">
+                    <div class="row filaBanda">
+                        <div class="col-md-2 nombreBanda">Soda Stereo</div>
+                        <div class="col-md-10" id="dataSoda"></div>
+                    </div>
+                    <div class="row filaBanda">
+                        <div class="col-md-2 nombreBanda">Virus</div>
+                        <div class="col-md-10" id="dataVirus"></div>
+                    </div>
+                    <div class="row filaBanda">
+                        <div class="col-md-2 nombreBanda">Sumo</div>
+                        <div class="col-md-10" id="dataSumo"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="infoBandas" style="display: none">
+        <div class="col-md-10 col-md-offset-1">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="recuadro" id="linksBandas">
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="panel panel-info" id="infoBandaElegida" style="visibility: hidden;">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h4 id="bandaElegida"></h4>
+                                </div>
+                                <div class="col-md-6 aLaDerechaDeH4">
+                                    <span class="labelDato">Total de copias vendidas</span>
+                                    <span id="totalCopiasBandaElegida"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-body" id="infoDiscosBandaElegida"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
