@@ -23,7 +23,7 @@
         document.getElementById("energiaJuanita").innerHTML = juanita.energia()
     }
     function comePepita() {
-        let cuantoCome = numeroSiEsNumero(document.getElementById("cuantoComePepita").value)
+        let cuantoCome = numeroSiEsNumerizable(document.getElementById("cuantoComePepita").value)
         if (cuantoCome) {
             pepita.comer(cuantoCome)
             mostrarEnergias()
@@ -31,7 +31,7 @@
         }
     }
     function vuelaPepita() {
-        let cuantoVuela = numeroSiEsNumero(document.getElementById("cuantoVuelaPepita").value)
+        let cuantoVuela = numeroSiEsNumerizable(document.getElementById("cuantoVuelaPepita").value)
         if (cuantoVuela) {
             pepita.volar(cuantoVuela)
             mostrarEnergias()
@@ -39,7 +39,7 @@
         }
     }
     function comeJuanita() {
-        let cuantoCome = numeroSiEsNumero(document.getElementById("cuantoComeJuanita").value)
+        let cuantoCome = numeroSiEsNumerizable(document.getElementById("cuantoComeJuanita").value)
         if (cuantoCome) {
             juanita.comer(cuantoCome)
             mostrarEnergias()
@@ -47,14 +47,20 @@
         }
     }
     function vuelaJuanita() {
-        let cuantoVuela = numeroSiEsNumero(document.getElementById("cuantoVuelaJuanita").value)
+        let cuantoVuela = numeroSiEsNumerizable(document.getElementById("cuantoVuelaJuanita").value)
         if (cuantoVuela) {
             juanita.volar(cuantoVuela)
             mostrarEnergias()
             document.getElementById("cuantoVuelaJuanita").value = ""
         }
     }
-    function numeroSiEsNumero(string) {
+
+    /**
+     * Si el string puede transformarse a un número, devuelve ese número. 
+     * Si no, devuelve null.
+     * P.ej. numeroSiEsNumerizable('4') --> 4, numeroSiEsNumerizable('juancho') --> null
+     */
+    function numeroSiEsNumerizable(string) {
         return (string && Number(string)) ? Number(string) : null
     }
     </script>
