@@ -25,8 +25,8 @@ class Avion {
 
 class Vuelo {
     constructor(origen, destino, tiempoDeVuelo, precioStandard) {
-        this._origen = origen
-        this._destino = destino
+        this._origen = new Ciudad(origen)
+        this._destino = new Ciudad(destino)
         this._tiempoDeVuelo = tiempoDeVuelo
         this._precioStandard = precioStandard
 
@@ -43,6 +43,8 @@ class Vuelo {
 
     origen() { return this._origen }
     destino() { return this._destino }
+    setOrigen(ciudad) { this._origen = ciudad }
+    setDestino(ciudad) { this._destino = ciudad }
     numero() { return this._numero }
     precioStandard() { return this._precioStandard }
 
@@ -136,13 +138,34 @@ class Pasaje {
 }
 
 
+// para no repetir la funcion
+const sumadorCantidadAsientosOcupados = (acum, vuelo) => acum + vuelo.cantidadAsientosOcupados()
+
+class Ciudad {
+    constructor(nombre) { this._nombre = nombre }
+
+    pasajerosQueLlegaron() { 
+        return elStore.vuelosHaciaCiudad(this).reduce(sumadorCantidadAsientosOcupados, 0) 
+    }
+
+    pasajerosQueSalieron() {
+        return elStore.vuelosDesdeCiudad(this).reduce(sumadorCantidadAsientosOcupados, 0)
+    }
+}
+
+
 class VueloStore {
     constructor() {
         this._vuelos = []
         this._aviones = []
+        this._ciudades = []
     }
 
-    agregarVuelos(nuevosVuelos) { nuevosVuelos.forEach(vuelo => this._vuelos.push(vuelo)) }
+    agregarVuelos(nuevosVuelos) { nuevosVuelos.forEach(vuelo => this.agregarVuelo(vuelo)) }
+    agregarVuelo(nuevoVuelo) { 
+        vuelo.setOrigen(this.ciudadConNombre(vuelo.origen().nombre()))
+        vuelo.setDestino(this.ciudadConNombre(vuelo.destino().nombre()))
+    }
     agregarAviones(nuevosAviones) { nuevosAviones.forEach(avion => this._aviones.push(avion)) }
 
     vuelos() { return this._vuelos }
@@ -150,6 +173,28 @@ class VueloStore {
 
     aviones() { return this._aviones }
     avionConNombre(nombre) { return this._aviones.find(avion => avion.nombre() == nombre) }
+
+    ciudadConNombre(nombre) { 
+        let ciudad = this._ciudades.find(ciudad => ciudad.nombre() == nombre)
+        if (!ciudad) {
+            ciudad = new Ciudad(nombre)
+            this._ciudades.push(ciudad)
+        }
+        return ciudad 
+    }
+
+    ciudades() { 
+        // genero una copia, el array que mantiene el Store queda sin tocar
+        let ordenado = Object.assign([], this._ciudades)   
+        
+        // el sort no crea un array adicional, ordena el array 'ordenado'
+        ordenado.sort((c1, c2) => c1.nombre().localeCompare(c2.nombre()))    
+
+        return ordenado
+    }
+
+    vuelosDesdeCiudad(ciudad) { return this.vuelos().filter(vuelo => vuelo.origen() == ciudad)}
+    vuelosHaciaCiudad(ciudad) { return this.vuelos().filter(vuelo => vuelo.destino() == ciudad)}
 }
 
 
@@ -180,8 +225,13 @@ vuelo4.setAvion(airbus)
 vuelo4.setPoliticaPrecio(politicasDePrecio.remate)
 vuelo4.venderPasajesAutomaticos(22)
 
+const vuelo5 = new VueloNormal("Buenos Aires", "Paris", 14, 1800)
+vuelo4.setAvion(airbus)
+vuelo4.setPoliticaPrecio(politicasDePrecio.estricta)
+vuelo4.venderPasajesAutomaticos(100)
+
 const elStore = new VueloStore() 
-elStore.agregarVuelos([vuelo1, vuelo2, vuelo3, vuelo4])
+elStore.agregarVuelos([vuelo1, vuelo2, vuelo3, vuelo4, vuelo5])
 elStore.agregarAviones([boeing, airbus, embraer, fokker])
 
 
