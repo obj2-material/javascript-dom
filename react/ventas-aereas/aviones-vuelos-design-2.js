@@ -52,8 +52,8 @@ class InfoVuelosAviones extends React.Component {
                                 return (
                                     <tr key={vuelo.numero()}>
                                         <td>{vuelo.tipoAsString()}</td>
-                                        <td>{vuelo.origen()}</td>
-                                        <td>{vuelo.destino()}</td>
+                                        <td>{vuelo.origen().nombre()}</td>
+                                        <td>{vuelo.destino().nombre()}</td>
                                         <td>{vuelo.cantidadAsientosLibres()}</td>
                                         <td>{vuelo.precioPasaje()}</td>
                                         <td>{vuelo.cantidadPasajesEmitidos()}</td>

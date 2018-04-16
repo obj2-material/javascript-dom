@@ -144,6 +144,8 @@ const sumadorCantidadAsientosOcupados = (acum, vuelo) => acum + vuelo.cantidadAs
 class Ciudad {
     constructor(nombre) { this._nombre = nombre }
 
+    nombre() { return this._nombre }
+
     pasajerosQueLlegaron() { 
         return elStore.vuelosHaciaCiudad(this).reduce(sumadorCantidadAsientosOcupados, 0) 
     }
@@ -163,8 +165,9 @@ class VueloStore {
 
     agregarVuelos(nuevosVuelos) { nuevosVuelos.forEach(vuelo => this.agregarVuelo(vuelo)) }
     agregarVuelo(nuevoVuelo) { 
-        vuelo.setOrigen(this.ciudadConNombre(vuelo.origen().nombre()))
-        vuelo.setDestino(this.ciudadConNombre(vuelo.destino().nombre()))
+        nuevoVuelo.setOrigen(this.ciudadConNombre(nuevoVuelo.origen().nombre()))
+        nuevoVuelo.setDestino(this.ciudadConNombre(nuevoVuelo.destino().nombre()))
+        this._vuelos.push(nuevoVuelo)
     }
     agregarAviones(nuevosAviones) { nuevosAviones.forEach(avion => this._aviones.push(avion)) }
 
@@ -226,12 +229,17 @@ vuelo4.setPoliticaPrecio(politicasDePrecio.remate)
 vuelo4.venderPasajesAutomaticos(22)
 
 const vuelo5 = new VueloNormal("Buenos Aires", "Paris", 14, 1800)
-vuelo4.setAvion(airbus)
-vuelo4.setPoliticaPrecio(politicasDePrecio.estricta)
-vuelo4.venderPasajesAutomaticos(100)
+vuelo5.setAvion(airbus)
+vuelo5.setPoliticaPrecio(politicasDePrecio.estricta)
+vuelo5.venderPasajesAutomaticos(100)
+
+const vuelo6 = new VueloNormal("Marrakesh", "Bologna", 9, 750)
+vuelo6.setAvion(boeing)
+vuelo6.setPoliticaPrecio(politicasDePrecio.ventaAnticipada)
+vuelo6.venderPasajesAutomaticos(50)
 
 const elStore = new VueloStore() 
-elStore.agregarVuelos([vuelo1, vuelo2, vuelo3, vuelo4, vuelo5])
+elStore.agregarVuelos([vuelo1, vuelo2, vuelo3, vuelo4, vuelo5, vuelo6])
 elStore.agregarAviones([boeing, airbus, embraer, fokker])
 
 
