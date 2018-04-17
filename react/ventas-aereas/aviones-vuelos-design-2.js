@@ -38,13 +38,11 @@ class InfoVuelosAviones extends React.Component {
                     <table className="table table-striped">
                         <thead>
                             <tr>
-                                <th>Tipo de vuelo</th>
-                                <th>Origen</th>
-                                <th>Destino</th>
-                                <th>Asientos libres</th>
-                                <th>Precio pasaje</th>
-                                <th>Pasajes vendidos</th>
-                                <th>Importe total vendido</th>
+                                { /* forma concisa de definir los títulos */
+                                 ["Tipo de vuelo", "Origen", "Destino", "Asientos libres",
+                                  "Precio pasaje", "Pasajes vendidos", "Importe total vendido" ]
+                                      .map(titulo => (<th>{titulo}</th>))
+                                }
                             </tr>
                         </thead>
                         <tbody>
