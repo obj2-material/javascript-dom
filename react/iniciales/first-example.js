@@ -12,12 +12,11 @@ class FirstExample extends React.Component {
         const theStyle = { fontSize: this.state.tamanioFuente }
         // esto es una expresión JSX, parece HTML pero no lo es
         // ver renderSinJsx() abajo
-        // 
-        // Los elementos dinámicos no necesitan id, lo que es dinámico
-        // se expresa en JavaScript, es lo que está entre llaves.
         return (
             <div>
                 <p><span style={ theStyle }>
+                    {/*  Los elementos dinámicos no necesitan id, 
+                         lo dinámico se expresa en JavaScript entre llaves */}
                     { this.state.texto }
                 </span></p>
                 <button onClick={() => this.changeTextAndFont()}>React magic</button>
@@ -61,7 +60,7 @@ class FirstExample extends React.Component {
             ),
             React.createElement(
                 'button',
-                { onClick: function onClick() { return self.fillDemo(); } },
+                { onClick: function onClick() { return self.changeTextAndFont(); } },
                 'JS magic'
             )
         );
