@@ -1,0 +1,25 @@
+{
+  "name": "monsters-react",
+  "version": "0.1.0",
+  "description": "a page that shows some Monsters Of Rock domain info",
+  "author": "Carlos Lombardi",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "lodash.defaultto": "^4.14.0",
+    "lodash.range": "^3.2.0",
+    "lodash.sortby": "^4.7.0",
+    "react": "^15.4.2",
+    "react-bootstrap": "^0.32.1",
+    "react-dom": "^15.4.2",
+    "superagent": "^3.8.2"
+  },
+  "devDependencies": {
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "bundle-collapser": "^1.3.0",
+    "babelify": "^7.3.0",
+    "envify": "^4.1.0",
+    "uglifyify": "^3.0.4"
+  }
+}
