@@ -1,0 +1,9 @@
+Para ver el ejemplo funcionando, se debe levantar el servidor.
+Suponiendo que estamos parados con el prompt en client-server:
+
+  cd server
+  npm install
+  node server
+
+Ahora, simplemente clickar en client.html y podremos consultar a nuestro server
+la cantidad de asientos de un avion   
