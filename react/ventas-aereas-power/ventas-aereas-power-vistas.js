@@ -1,5 +1,5 @@
 const React = require('react')
-const ReactDOM = require('react-dom')
+import { connect } from 'react-redux'
 
 const axios = require('axios')
 
@@ -14,7 +14,7 @@ const infoPaises = require('./info-paises')
 /***********************************************
     Detalle vuelo
  ***********************************************/
-class DetalleVuelo extends ventasAereasUtils.PantallaAplicacionVuelos {
+class DetalleVueloRaw extends ventasAereasUtils.PantallaAplicacionVuelos {
     render() {
         return (
             <div className="container recuadroPantalla">
@@ -84,6 +84,13 @@ class DetalleVuelo extends ventasAereasUtils.PantallaAplicacionVuelos {
     }
 
 }
+
+
+const DetalleVuelo = connect(
+    state => { return {vuelo: state.vuelo} },
+    dispatch => { return {} }
+)(DetalleVueloRaw)
+
 
 
 /***********************************************

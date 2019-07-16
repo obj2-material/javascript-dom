@@ -1,7 +1,7 @@
 {
-  "name": "monsters-react",
+  "name": "ventas-aereas-power",
   "version": "0.1.0",
-  "description": "a page that shows some Monsters Of Rock domain info",
+  "description": "little app about flights and planes",
   "author": "Carlos Lombardi",
   "license": "ISC",
   "dependencies": {
@@ -9,9 +9,11 @@
     "lodash.defaultto": "^4.14.0",
     "lodash.range": "^3.2.0",
     "lodash.sortby": "^4.7.0",
-    "react": "^15.4.2",
-    "react-bootstrap": "^0.32.1",
-    "react-dom": "^15.4.2",
+    "react": "^16.8.6",
+    "react-bootstrap": "^1.0.0-beta.9",
+    "react-dom": "^16.8.6",
+    "react-redux": "^7.1.0",
+    "redux": "^4.0.4",
     "superagent": "^3.8.2"
   },
   "devDependencies": {

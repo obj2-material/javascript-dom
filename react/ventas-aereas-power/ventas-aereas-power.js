@@ -1,6 +1,9 @@
 const React = require('react')
 const ReactDOM = require('react-dom')
 
+import { Provider, connect } from 'react-redux'
+import { createStore } from 'redux'
+
 // cargo de lodash solamente lo que uso
 const sortBy = require('lodash.sortby')
 
@@ -11,7 +14,28 @@ const acciones = require('./ventas-aereas-power-acciones')
 const vistas = require('./ventas-aereas-power-vistas')
 
 
-// para ver, aunque no está incluido: ventas-aereas-power-alternativas-descartadas
+
+/***********************************************
+    Redux stuff
+ ***********************************************/
+const reduxActionNames = { CAMBIO_VUELO: "CAMBIO_VUELO" }
+const seleccionVuelo = (vuelo) => {return { type: reduxActionNames.CAMBIO_VUELO, vuelo }}
+
+const theReducer = (state, action) => {
+    if (action.type == reduxActionNames.CAMBIO_VUELO) {
+        return Object.assign({}, state, {vuelo: action.vuelo})
+    } else {
+        return state
+    }
+}
+
+
+
+/***********************************************
+    Redux init
+ ***********************************************/
+
+const store = createStore(theReducer)
 
 
 /***********************************************
@@ -20,7 +44,7 @@ const vistas = require('./ventas-aereas-power-vistas')
 const pantallas = { 
     infoVuelos: 1, ventaPasajes: 2, detalleVuelo: 3, detallePasajes: 4, agregarVuelo: 5, infoAvion: 6, ventaMasivaPasajes: 7
 }
-class AplicacionVuelos extends React.Component {
+class AplicacionVuelosRaw extends React.Component {
     constructor(props) {
         super(props)
         this.state = { pantallaActual: pantallas.infoVuelos }
@@ -41,6 +65,7 @@ class AplicacionVuelos extends React.Component {
 
     mostrarDetalleVuelo(vuelo) {
         this._vueloActual = vuelo
+        this.props.elegirVuelo(vuelo)
         this.setState({ pantallaActual: pantallas.detalleVuelo })
     }
 
@@ -68,7 +93,7 @@ class AplicacionVuelos extends React.Component {
             return (<InfoVuelos rootComponent={this}/>)
         } else if (this.state.pantallaActual === pantallas.detalleVuelo) {
             this.setUltimaAccion(() => this.mostrarDetalleVuelo(this._vueloActual))
-            return (<vistas.DetalleVuelo rootComponent={this} vuelo={this._vueloActual} />)
+            return (<vistas.DetalleVuelo rootComponent={this} />)
         } else if (this.state.pantallaActual === pantallas.ventaPasajes) {
             this.setUltimaAccion(() => this.mostrarVentaPasaje(this._vueloActual))
             return (<acciones.VentaPasaje rootComponent={this} vuelo={this._vueloActual} />)
@@ -84,6 +109,12 @@ class AplicacionVuelos extends React.Component {
         }
     }
 }
+
+
+const AplicacionVuelos = connect(
+    state => {return {}},
+    dispatch => {return {elegirVuelo: vuelo => dispatch(seleccionVuelo(vuelo))}}
+)(AplicacionVuelosRaw)
 
 
 /***********************************************
@@ -275,7 +306,9 @@ class InfoVuelos extends ventasAereasUtils.PantallaAplicacionVuelos {
     Conexión con HTML
  ***********************************************/
 ReactDOM.render(
-    <AplicacionVuelos />,
+    <Provider store={store}>
+        <AplicacionVuelos />
+    </Provider>,
     document.getElementById('reactPage')
 );
 

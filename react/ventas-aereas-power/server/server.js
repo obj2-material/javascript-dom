@@ -19,7 +19,6 @@ app.get('/datosAvion', (req,res) =>{
 
   if (elAvion) {
     res.json(elAvion)
-    console.log(req)
   	console.log("Alquien preguntó por el avion"+nombreAvion)
   } else {
     res.status(400) // Comunico al cliente que hizo un BAD REQUEST (podria ser un 404)
