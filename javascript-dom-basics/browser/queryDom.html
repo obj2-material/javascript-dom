@@ -1,0 +1,21 @@
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>First JS example - with button</title>
+  <script>
+  function mostrarDataDelSpan() {
+    const elemento = document.getElementById("parteDestacada")
+    alert(`Texto: ${elemento.innerHTML}\ncolor del texto: ${elemento.style.color}`)
+  }
+  </script>
+</head>
+<body>
+  <p>
+    Página con <span id="parteDestacada" style="color: mediumblue">un cartelito</span>
+  </p>
+
+  <p>
+    <button onClick="mostrarDataDelSpan()">Algo de info sobre el elemento que está en azul</button>
+  </p>
+
+</html>

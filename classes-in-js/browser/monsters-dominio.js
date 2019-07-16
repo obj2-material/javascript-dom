@@ -55,6 +55,12 @@ class Banda {
         return _.sumBy(this.discos(), disco => disco.copiasVendidasEnPais(pais))
     }    
     totalCopias() { return _.sumBy(this._discos, (disco) => disco.totalCopias()) }
+    discosConCopias() {
+        return self.discos()
+            .map((disco) => disco.nombre() + ": " + disco.totalCopias().toString())
+            .join("  -  ")
+    }
+
 }
 
 class BaseDeBandas {

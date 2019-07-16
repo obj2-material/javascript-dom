@@ -1,0 +1,45 @@
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Golondrinas</title>
+
+	<script>
+    /*
+     * Modelo
+     */
+    class Golondrina {
+        constructor() { this._energia = 0 }
+        energia() { return this._energia }
+        comer(gramos) { this._energia += gramos * 4 }
+        volar(kms) { this._energia -= kms + 10 }
+    }
+
+    // inicializo la golondrina que voy a mostrar
+    const pepita = new Golondrina()
+    pepita.comer(50)
+	</script>
+
+  <script>
+  /*
+   * Actualización de la pantalla 
+   */
+  function actualizarEnergia() {
+    document.getElementById("energiaDePepita").innerHTML = pepita.energia()
+  }
+
+  function comePepita() {
+    pepita.comer(parseInt(document.getElementById("cuantoComePepita").value)) 
+  }
+  </script>
+</head>
+
+<body onload="actualizarEnergia()">
+  <div style="margin-left: 20px; margin-top: 40px">
+    <span style="font-weight: bold;">Energía de Pepita</span>
+    <span style="margin-left: 10px" id="energiaDePepita"></span>
+  </div>
+  <div style="margin-left: 20px; margin-top: 20px">
+    <input id="cuantoComePepita" style="width: 60px">
+    <button onclick="comePepita()" style="margin-left: 30px; margin-right: 100px">Come Pepita</button>
+  </div>
+</html>
